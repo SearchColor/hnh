@@ -20,6 +20,11 @@ public class S3config {
     @Value("${spring.cloud.aws.region.static}")
     private String region;
 
+    /**
+     * S3Client 빈 등록
+     *
+     * @return
+     */
     @Bean
     public AmazonS3 AmazonS3() {
         BasicAWSCredentials awsCred = new BasicAWSCredentials(accessKey, secretKey);
