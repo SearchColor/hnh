@@ -26,8 +26,8 @@ public class AdminCreateRequestDto {
     public User toEntity() {
         return new User(
                 this.email,
-                this.password,
-                this.name
+                this.name,
+                this.password
         );
     }
 }
