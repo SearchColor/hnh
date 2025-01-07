@@ -15,6 +15,7 @@ public class Member extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "varchar(10) default 'MEMBER'")
     private String role;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,5 +26,15 @@ public class Member extends BaseEntity{
     @JoinColumn(name = "group_id")
     private Group group;
 
+    public Member() {}
 
+    public Member(String role, User user, Group group) {
+        this.role = role;
+        this.user = user;
+        this.group = group;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
