@@ -1,7 +1,7 @@
-package com.example.hnh.error.handler;
+package com.example.hnh.global.error.handler;
 
-import com.example.hnh.error.exception.CustomException;
-import com.example.hnh.error.response.ErrorResponse;
+import com.example.hnh.global.error.exception.CustomException;
+import com.example.hnh.global.error.response.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static com.example.hnh.error.errorcode.ErrorCode.DUPLICATE_RESOURCE;
+import static com.example.hnh.global.error.errorcode.ErrorCode.DUPLICATE_RESOURCE;
 
 @Slf4j
 @RestControllerAdvice

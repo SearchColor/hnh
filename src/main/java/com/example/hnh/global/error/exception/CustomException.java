@@ -1,6 +1,6 @@
-package com.example.hnh.error.exception;
+package com.example.hnh.global.error.exception;
 
-import com.example.hnh.error.errorcode.ErrorCode;
+import com.example.hnh.global.error.errorcode.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

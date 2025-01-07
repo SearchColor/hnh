@@ -1,6 +1,6 @@
-package com.example.hnh.error.response;
+package com.example.hnh.global.error.response;
 
-import com.example.hnh.error.errorcode.ErrorCode;
+import com.example.hnh.global.error.errorcode.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;

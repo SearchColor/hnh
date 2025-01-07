@@ -1,4 +1,4 @@
-package com.example.hnh.error.errorcode;
+package com.example.hnh.global.error.errorcode;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
