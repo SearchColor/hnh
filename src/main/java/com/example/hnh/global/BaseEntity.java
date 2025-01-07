@@ -1,7 +1,5 @@
 package com.example.hnh.global;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -14,11 +12,9 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-
 public abstract class BaseEntity {
 
-    @Column(columnDefinition = "varchar(10) default 'activity'")
-    private String status ;
+    private String status = "active";
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -26,4 +22,7 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
