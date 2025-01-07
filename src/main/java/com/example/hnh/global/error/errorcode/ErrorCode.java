@@ -10,7 +10,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
-
+    INVALID_FILE_FORMAT(BAD_REQUEST, "지원되지 않는 파일 형식입니다"),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
 
