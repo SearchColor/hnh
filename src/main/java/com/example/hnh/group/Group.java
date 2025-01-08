@@ -4,9 +4,11 @@ import com.example.hnh.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
-@Table(name = "group")
+@Table(name = "`group`")
 public class Group extends BaseEntity {
 
     @Id
@@ -29,4 +31,13 @@ public class Group extends BaseEntity {
     private String detail;
 
 
+    public Group() {};
+
+    public Group(Long userId, Long categoryId, String name, String imagePath, String detail) {
+        this.userId = userId;
+        this.categoryId = categoryId;
+        this.name = name;
+        this.imagePath = imagePath;
+        this.detail = detail;
+    }
 }
