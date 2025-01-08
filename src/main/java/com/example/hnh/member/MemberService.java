@@ -9,7 +9,6 @@ import com.example.hnh.member.dto.AddMemberResponseDto;
 import com.example.hnh.member.dto.MemberResponseDto;
 import com.example.hnh.user.User;
 import com.example.hnh.user.UserRepository;
-import com.example.hnh.user.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,9 +38,16 @@ public class MemberService {
         Group group = groupRepository.findById(groupId).orElse(null);
 
         Optional<Member> optionalMember = memberRepository.findByUserIdAndGroupId(userId, groupId);
+        if(optionalMember.isPresent() && optionalMember.get().getStatus().equals("deleted")) {
+            Member readdMember = optionalMember.get();
+            readdMember.setStatus("pending");
+
+            return new AddMemberResponseDto(readdMember.getId(), readdMember.getStatus());
+        }
         if(optionalMember.isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
         }
+
 
         Member member = new Member(MemberRole.MEMBER, user, group);
         member.setStatus("pending");
