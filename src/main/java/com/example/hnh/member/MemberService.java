@@ -9,6 +9,7 @@ import com.example.hnh.member.dto.AddMemberResponseDto;
 import com.example.hnh.member.dto.MemberResponseDto;
 import com.example.hnh.user.User;
 import com.example.hnh.user.UserRepository;
+import com.example.hnh.user.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,7 @@ public class MemberService {
      */
     @Transactional
     public AddMemberResponseDto addMember(Long userId, Long groupId) {
-        //TODO : Repositoy 메서드에 따라 수정
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findByIdOrElseThrow(userId);
         Group group = groupRepository.findById(groupId).orElse(null);
 
         Optional<Member> optionalMember = memberRepository.findByUserIdAndGroupId(userId, groupId);
@@ -43,7 +43,7 @@ public class MemberService {
             throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
         }
 
-        Member member = new Member("MEMBER", user, group);
+        Member member = new Member(MemberRole.MEMBER, user, group);
         member.setStatus("pending");
         Member savedMember = memberRepository.save(member);
 
@@ -59,9 +59,9 @@ public class MemberService {
      */
     @Transactional
     public AddMemberResponseDto approveMember(Long userId, Long memberId) {
-        //TODO : Repositoy 메서드에 따라 수정, 권한 체킹(그룹 관리자만 멤버 승인 가능) -> security 권한 처리시 삭제
-        User user = userRepository.findById(userId).orElseThrow(() ->  new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getAuth().equals("ADMIN")){
+        //TODO : 권한 체킹(그룹 관리자만 멤버 승인 가능) -> security 권한 처리시 삭제
+        User user = userRepository.findByIdOrElseThrow(userId);
+        if(user.getAuth().equals(UserRole.ADMIN)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
@@ -82,16 +82,15 @@ public class MemberService {
      */
     @Transactional
     public MemberResponseDto updateStatusMember(Long userId, Long memberId, String role) {
-        //TODO : Repositoy 메서드에 따라 수정, 권한 체킹(그룹 관리자만 멤버 변경 가능) -> security 권한 처리시 삭제
         User user = userRepository.findById(userId).orElseThrow(() ->  new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getAuth().equals("ADMIN")){
+        if(user.getAuth().equals(UserRole.ADMIN)){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
         Member member = memberRepository.findByMemberId(memberId);
-        member.setRole(role);
+        member.setRole(MemberRole.valueOf(role));
 
-        return new MemberResponseDto(member.getId(), member.getRole());
+        return new MemberResponseDto(member.getId(), member.getRole().toString());
     }
 
 
@@ -107,7 +106,7 @@ public class MemberService {
         return members.stream()
                 .map(member -> new MemberResponseDto(
                         member.getId(),
-                        member.getRole())).collect(Collectors.toList());
+                        member.getRole().toString())).collect(Collectors.toList());
     }
 
     /**
