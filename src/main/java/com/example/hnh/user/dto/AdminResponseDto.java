@@ -1,6 +1,7 @@
 package com.example.hnh.user.dto;
 
 import com.example.hnh.user.User;
+import com.example.hnh.user.UserRole;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -14,13 +15,13 @@ public class AdminResponseDto {
 
     private final String name;
 
-    private final String auth;
+    private final UserRole auth;
 
     private final String status;
 
     private final LocalDateTime createdAt;
 
-    public AdminResponseDto(Long userId, String email, String name, String auth, String status, LocalDateTime createdAt) {
+    public AdminResponseDto(Long userId, String email, String name, UserRole auth, String status, LocalDateTime createdAt) {
         this.userId = userId;
         this.email = email;
         this.name = name;
