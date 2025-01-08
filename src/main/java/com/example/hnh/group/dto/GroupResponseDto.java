@@ -8,23 +8,26 @@ import java.time.LocalDateTime;
 @Getter
 public class GroupResponseDto {
 
-    private Long groupId;
+    private Long groupId; // 그룹 식별자 ID
 
-    private Long categoryId;
+    private Long userId; // 그룹 생성자 ID
 
-    private String groupName;
+    private Long categoryId; // 카테고리 ID
 
-    private String detail;
+    private String groupName; // 그룹명
 
-    private String imagePath;
+    private String detail; // 그룹 설명
 
-    private LocalDateTime createdAt;
+    private String imagePath; // 이미지 파일
+
+    private LocalDateTime createdAt; // 생성일
 
 
 
-    public GroupResponseDto(Long groupId, Long categoryId, String groupName, String detail,
+    public GroupResponseDto(Long groupId, Long userId, Long categoryId, String groupName, String detail,
                             String imagePath, LocalDateTime createdAt) {
         this.groupId = groupId;
+        this.userId = userId;
         this.categoryId = categoryId;
         this.groupName = groupName;
         this.detail = detail;
@@ -35,6 +38,7 @@ public class GroupResponseDto {
     public static GroupResponseDto toDto(Group group) {
         return new GroupResponseDto(
                 group.getId(),
+                group.getUserId(),
                 group.getCategoryId(),
                 group.getName(),
                 group.getDetail(),
