@@ -4,6 +4,7 @@ import com.example.hnh.board.dto.BoardResponseDto;
 import com.example.hnh.board.dto.SearchAllBoardResponseDto;
 import com.example.hnh.board.dto.SearchBoardResponseDto;
 import com.example.hnh.board.dto.UpdateBoardResponseDto;
+import com.example.hnh.global.MessageResponseDto;
 import com.example.hnh.global.error.errorcode.ErrorCode;
 import com.example.hnh.global.error.exception.CustomException;
 import com.example.hnh.global.s3.S3Service;
@@ -90,5 +91,18 @@ public class BoardService {
                 board.getDetail(),
                 board.getImagePath(),
                 board.getModifiedAt());
+    }
+
+    public MessageResponseDto deleteBoard(Long userId, Long groupId, Long boardId) {
+        Member member = memberRepository.findByUserIdAndGroupIdOrElseThrow(userId, groupId);
+        Board board = boardRepository.findByBoardIdOrElseThrow(boardId);
+
+        if(!board.getMember().getId().equals(member.getId())) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_AUTHOR);
+        }
+
+        board.setStatus("deleted");
+
+        return new MessageResponseDto("삭제 완료되었습니다.");
     }
 }
