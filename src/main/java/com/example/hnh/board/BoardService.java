@@ -3,6 +3,9 @@ package com.example.hnh.board;
 import com.example.hnh.board.dto.BoardResponseDto;
 import com.example.hnh.board.dto.SearchAllBoardResponseDto;
 import com.example.hnh.board.dto.SearchBoardResponseDto;
+import com.example.hnh.board.dto.UpdateBoardResponseDto;
+import com.example.hnh.global.error.errorcode.ErrorCode;
+import com.example.hnh.global.error.exception.CustomException;
 import com.example.hnh.global.s3.S3Service;
 import com.example.hnh.member.Member;
 import com.example.hnh.member.MemberRepository;
@@ -60,10 +63,32 @@ public class BoardService {
     }
 
     public SearchBoardResponseDto getBoard(Long boardId) {
-        //TODO:권한 처리(멤버만 볼 수 있게 설정)
 
+        //TODO:권한 처리(멤버만 볼 수 있게 설정)
         Board board = boardRepository.findByBoardIdOrElseThrow(boardId);
 
         return new SearchBoardResponseDto(board);
+    }
+
+    public UpdateBoardResponseDto updateBoard(Long boardId, Long userId, Long groupId, String title, String detail, MultipartFile image) throws IOException {
+        Member member = memberRepository.findByUserIdAndGroupIdOrElseThrow(userId, groupId);
+        Board board = boardRepository.findByBoardIdOrElseThrow(boardId);
+
+        if(!board.getMember().getId().equals(member.getId())) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_AUTHOR);
+        }
+
+        //TODO:이미지 변경 시 기존 이미지 삭제 후 재 업로드
+        String imagePath = s3Service.uploadImage(image);
+
+        board.updateBoard(title, imagePath, detail);
+
+        return new UpdateBoardResponseDto(
+                board.getId(),
+                board.getMember().getId(),
+                board.getTitle(),
+                board.getDetail(),
+                board.getImagePath(),
+                board.getModifiedAt());
     }
 }
