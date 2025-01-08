@@ -5,12 +5,14 @@ import com.example.hnh.board.dto.BoardResponseDto;
 import com.example.hnh.board.dto.SearchAllBoardResponseDto;
 import com.example.hnh.board.dto.SearchBoardResponseDto;
 import com.example.hnh.board.dto.UpdateBoardResponseDto;
+import com.example.hnh.global.MessageResponseDto;
 import com.example.hnh.global.config.auth.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,5 +78,18 @@ public class BoardController {
         UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId, userId, groupId, dto.getTitle(), dto.getDetail(), image);
 
         return new ResponseEntity<>(updateBoardResponseDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<MessageResponseDto> deleteBoard(
+            @PathVariable Long boardId,
+            @PathVariable Long groupId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+
+        Long userId = userDetails.getUser().getId();
+
+        MessageResponseDto messageResponseDto = boardService.deleteBoard(userId, groupId, boardId);
+
+        return new ResponseEntity<>(messageResponseDto, HttpStatus.OK);
     }
 }
