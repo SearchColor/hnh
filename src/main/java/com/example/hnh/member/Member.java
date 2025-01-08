@@ -16,7 +16,7 @@ public class Member extends BaseEntity{
     private Long id;
 
     @Column(columnDefinition = "varchar(10) default 'MEMBER'")
-    private String role;
+    private MemberRole role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -28,13 +28,13 @@ public class Member extends BaseEntity{
 
     public Member() {}
 
-    public Member(String role, User user, Group group) {
+    public Member(MemberRole role, User user, Group group) {
         this.role = role;
         this.user = user;
         this.group = group;
     }
 
-    public void setRole(String role) {
+    public void setRole(MemberRole role) {
         this.role = role;
     }
 }
