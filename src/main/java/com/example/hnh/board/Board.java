@@ -24,6 +24,8 @@ public class Board extends BaseEntity{
 
     private Long view;
 
+    private Long likeCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
@@ -34,11 +36,12 @@ public class Board extends BaseEntity{
 
     public Board() {}
 
-    public Board(String title, String imagePath, String detail, Long view, Group group, Member member) {
+    public Board(String title, String imagePath, String detail, Long view, Long likeCount, Group group, Member member) {
         this.title = title;
         this.imagePath = imagePath;
         this.detail = detail;
         this.view = view;
+        this.likeCount = likeCount;
         this.group = group;
         this.member = member;
     }
