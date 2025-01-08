@@ -12,6 +12,7 @@ public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INVALID_FILE_FORMAT(BAD_REQUEST, "지원되지 않는 파일 형식입니다"),
     PASSWORD_ERROR(BAD_REQUEST, "패스워드 에러"),
+    PASSWORD_UPDATE_ERROR(BAD_REQUEST, "새로운 비밀번호는 현재 비밀번호를 사용할 수 없습니다."),
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
 
 
