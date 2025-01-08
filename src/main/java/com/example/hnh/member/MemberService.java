@@ -9,6 +9,7 @@ import com.example.hnh.member.dto.AddMemberResponseDto;
 import com.example.hnh.member.dto.MemberResponseDto;
 import com.example.hnh.user.User;
 import com.example.hnh.user.UserRepository;
+import com.example.hnh.user.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
