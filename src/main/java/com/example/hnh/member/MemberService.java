@@ -9,7 +9,6 @@ import com.example.hnh.member.dto.AddMemberResponseDto;
 import com.example.hnh.member.dto.MemberResponseDto;
 import com.example.hnh.user.User;
 import com.example.hnh.user.UserRepository;
-import com.example.hnh.user.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,14 +53,14 @@ public class MemberService {
      * 멤버 승인
      *
      * @param userId   유저 id(그룹 관리자)
+     * @param groupId   그룹 id
      * @param memberId   승인되는 멤버 id
      * @return AddMemberResponseDto
      */
     @Transactional
-    public AddMemberResponseDto approveMember(Long userId, Long memberId) {
-        //TODO : 권한 체킹(그룹 관리자만 멤버 승인 가능) -> security 권한 처리시 삭제
-        User user = userRepository.findByIdOrElseThrow(userId);
-        if(user.getAuth().equals(UserRole.ADMIN)) {
+    public AddMemberResponseDto approveMember(Long userId, Long groupId, Long memberId) {
+        Member adminMember = memberRepository.findByUserIdAndGroupIdOrElseThrow(userId, groupId);
+        if(!adminMember.getRole().equals(MemberRole.GROUP_ADMIN)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
@@ -76,14 +75,15 @@ public class MemberService {
      * 멤버 상태 변경
      *
      * @param userId   유저 id(그룹 관리자)
+     * @param groupId   그룹 id
      * @param memberId   변경되는 멤버 id
      * @param role   변경하는 상태값
      * @return MemberResponseDto
      */
     @Transactional
-    public MemberResponseDto updateStatusMember(Long userId, Long memberId, String role) {
-        User user = userRepository.findById(userId).orElseThrow(() ->  new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getAuth().equals(UserRole.ADMIN)){
+    public MemberResponseDto updateStatusMember(Long userId, Long groupId, Long memberId, String role) {
+        Member adminMember = memberRepository.findByUserIdAndGroupIdOrElseThrow(userId, groupId);
+        if(!adminMember.getRole().equals(MemberRole.GROUP_ADMIN)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
