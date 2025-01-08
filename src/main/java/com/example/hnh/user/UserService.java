@@ -16,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j(topic = "Security::AccountService")
@@ -27,7 +29,7 @@ public class UserService {
     private final JwtProvider jwtProvider;
 
 
-
+    //회원 가입
     public UserResponseDto signUp(UserRequestDto requestDto){
 
         User user = new User(requestDto);
@@ -62,6 +64,17 @@ public class UserService {
         return new UserResponseDto(findUser);
     }
 
+    //비밀번호 변경
+    public String modifyPassword(Long userId , String currentPassword , String newPassword){
+        User user = this.userRepository.findByIdOrElseThrow(userId);
+        this.validatePassword(currentPassword,user.getPassword());
+        if (Objects.equals(currentPassword, newPassword)){
+            throw new CustomException(ErrorCode.PASSWORD_UPDATE_ERROR);
+        }
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return "변경되었습니다.";
+    }
 
     private void validatePassword(String rawPassword, String encodedPassword)
             throws IllegalArgumentException {
