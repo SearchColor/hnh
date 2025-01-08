@@ -31,6 +31,7 @@ public class Group extends BaseEntity {
     private String detail;
 
 
+
     public Group() {};
 
     public Group(Long userId, Long categoryId, String name, String imagePath, String detail) {
