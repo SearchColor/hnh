@@ -1,11 +1,16 @@
 package com.example.hnh.board;
 
 import com.example.hnh.board.dto.BoardResponseDto;
+import com.example.hnh.board.dto.SearchAllBoardResponseDto;
 import com.example.hnh.global.s3.S3Service;
 import com.example.hnh.member.Member;
 import com.example.hnh.member.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +30,7 @@ public class BoardService {
 
         String imagePath = s3Service.uploadImage(image);
 
-        Board board = new Board(title, imagePath, detail, 0L, member.getGroup(), member);
+        Board board = new Board(title, imagePath, detail, 0L, 0L, member.getGroup(), member);
         Board savedBoard = boardRepository.save(board);
 
         return new BoardResponseDto(
@@ -35,5 +40,21 @@ public class BoardService {
                 savedBoard.getDetail(),
                 savedBoard.getImagePath(),
                 savedBoard.getCreatedAt());
+    }
+
+    public Page<SearchAllBoardResponseDto> getBoards(Long groupId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Board> boards = boardRepository.findAllByGroupId(groupId, pageable);
+
+        return boards.map(board -> new SearchAllBoardResponseDto(
+                board.getId(),
+                board.getMember().getId(),
+                board.getTitle(),
+                board.getImagePath(),
+                board.getView(),
+                board.getLikeCount(),
+                board.getCreatedAt(),
+                board.getModifiedAt()));
     }
 }
