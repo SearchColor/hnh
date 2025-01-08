@@ -1,10 +1,14 @@
 package com.example.hnh.board;
 
+import com.example.hnh.comment.Comment;
 import com.example.hnh.global.BaseEntity;
 import com.example.hnh.group.Group;
 import com.example.hnh.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +37,9 @@ public class Board extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
 
     public Board() {}
 

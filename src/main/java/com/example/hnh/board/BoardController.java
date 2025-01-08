@@ -3,6 +3,7 @@ package com.example.hnh.board;
 import com.example.hnh.board.dto.BoardRequestDto;
 import com.example.hnh.board.dto.BoardResponseDto;
 import com.example.hnh.board.dto.SearchAllBoardResponseDto;
+import com.example.hnh.board.dto.SearchBoardResponseDto;
 import com.example.hnh.global.config.auth.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,5 +51,13 @@ public class BoardController {
         Page<SearchAllBoardResponseDto> boardResponseDtoPage = boardService.getBoards(groupId, page, size);
 
         return new ResponseEntity<>(boardResponseDtoPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<SearchBoardResponseDto> getBoard(@PathVariable Long boardId) {
+
+        SearchBoardResponseDto boardResponseDto = boardService.getBoard(boardId);
+
+        return new ResponseEntity<>(boardResponseDto, HttpStatus.OK);
     }
 }

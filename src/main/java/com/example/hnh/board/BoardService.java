@@ -2,6 +2,7 @@ package com.example.hnh.board;
 
 import com.example.hnh.board.dto.BoardResponseDto;
 import com.example.hnh.board.dto.SearchAllBoardResponseDto;
+import com.example.hnh.board.dto.SearchBoardResponseDto;
 import com.example.hnh.global.s3.S3Service;
 import com.example.hnh.member.Member;
 import com.example.hnh.member.MemberRepository;
@@ -56,5 +57,13 @@ public class BoardService {
                 board.getLikeCount(),
                 board.getCreatedAt(),
                 board.getModifiedAt()));
+    }
+
+    public SearchBoardResponseDto getBoard(Long boardId) {
+        //TODO:권한 처리(멤버만 볼 수 있게 설정)
+
+        Board board = boardRepository.findByBoardIdOrElseThrow(boardId);
+
+        return new SearchBoardResponseDto(board);
     }
 }
