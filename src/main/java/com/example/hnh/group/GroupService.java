@@ -34,8 +34,8 @@ public class GroupService {
 
 
     /**
-     * 그룹 생성
-     * @param userId
+     * 그룹 생성 API
+     * @param loginUser
      * @param categoryId
      * @param groupName
      * @param detail
@@ -79,6 +79,9 @@ public class GroupService {
         // 그룹 조회
         Group group = groupRepository.findByGroupOrElseThrow(groupId);
 
+        // 그룹 상태 확인
+        checkGroupStatus(group);
+
         // 그룹 관리자 정보 조회
         User user = userRepository.findById(group.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
@@ -100,9 +103,11 @@ public class GroupService {
      * @return
      */
     public GroupResponseDto updateGroup(Long groupId, GroupRequestDto requestDto) {
-
         // 그룹 조회
         Group group = groupRepository.findByGroupOrElseThrow(groupId);
+
+        // 그룹 상태 확인
+        checkGroupStatus(group);
 
         // 그룹 정보 업데이트
         group.updateGroup(requestDto.getGroupName(), requestDto.getDetail(), requestDto.getImagePath());
@@ -113,4 +118,37 @@ public class GroupService {
         // DTO로 변환하여 반환
         return GroupResponseDto.toDto(group);
     }
+
+    /**
+     * 그룹 삭제 API
+     * @param groupId
+     * @param loginUser
+     */
+    public void deleteGroup(Long groupId, User loginUser) {
+        // 그룹 조회
+        Group group = groupRepository.findByGroupOrElseThrow(groupId);
+
+        // 유저가 그룹에 속해있는지 확인
+        Member member = memberRepository.findByUserIdAndGroupIdOrElseThrow(loginUser.getId(), groupId);
+
+        // 그룹 상태 확인
+        checkGroupStatus(group);
+
+        // 그룹 상태 변경
+        if("active".equals(group.getStatus())) {
+            group.setStatus("deleted");
+        }
+
+        groupRepository.save(group);
+    }
+
+    // 그룹 상태 확인 메서드
+    public void checkGroupStatus(Group group) {
+
+        if ("deleted".equals(group.getStatus())) {
+            throw new IllegalArgumentException("삭제된 그룹입니다.");
+        }
+    }
+
+
 }
