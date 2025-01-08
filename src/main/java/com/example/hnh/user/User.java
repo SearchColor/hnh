@@ -1,6 +1,7 @@
 package com.example.hnh.user;
 
 import com.example.hnh.global.BaseEntity;
+import com.example.hnh.user.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -22,8 +23,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String auth = "user";
+    @Column(nullable = false , columnDefinition = "varchar(20)")
+    @Enumerated(value = EnumType.STRING)
+    private UserRole auth = UserRole.USER;
 
     public User() {
     }
@@ -34,7 +36,16 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public void updateAuth(String auth) {
+    public User(UserRequestDto requestDto){
+        this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+    }
+
+    public void updateAuth(UserRole auth) {
         this.auth = auth;
+    }
+
+    public void setPassword(String encodePassword){
+        this.password = encodePassword;
     }
 }
