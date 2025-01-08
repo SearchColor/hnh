@@ -47,7 +47,7 @@ public class SecretFilter {
     /**
      * 화이트 리스트.
      */
-    private static final String[] WHITE_LIST = {"/users/login", "/users/signup", "/error"};
+    private static final String[] WHITE_LIST = {"/users/login", "/users/signup", "/error", "/admins/signup"};
 
     /**
      * security 필터.
