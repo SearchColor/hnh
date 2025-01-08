@@ -1,7 +1,5 @@
 package com.example.hnh.group;
 
-import com.example.hnh.global.error.errorcode.ErrorCode;
-import com.example.hnh.global.error.exception.CustomException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
