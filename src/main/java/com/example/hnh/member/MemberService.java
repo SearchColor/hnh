@@ -9,6 +9,7 @@ import com.example.hnh.member.dto.AddMemberResponseDto;
 import com.example.hnh.member.dto.MemberResponseDto;
 import com.example.hnh.user.User;
 import com.example.hnh.user.UserRepository;
+import com.example.hnh.user.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,7 @@ public class MemberService {
      */
     @Transactional
     public AddMemberResponseDto addMember(Long userId, Long groupId) {
-        //TODO : Repositoy 메서드에 따라 수정
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findByIdOrElseThrow(userId);
         Group group = groupRepository.findById(groupId).orElse(null);
 
         Optional<Member> optionalMember = memberRepository.findByUserIdAndGroupId(userId, groupId);
@@ -43,7 +43,7 @@ public class MemberService {
             throw new CustomException(ErrorCode.DUPLICATE_MEMBER);
         }
 
-        Member member = new Member("MEMBER", user, group);
+        Member member = new Member(MemberRole.MEMBER, user, group);
         member.setStatus("pending");
         Member savedMember = memberRepository.save(member);
 
@@ -54,20 +54,20 @@ public class MemberService {
      * 멤버 승인
      *
      * @param userId   유저 id(그룹 관리자)
+     * @param groupId   그룹 id
      * @param memberId   승인되는 멤버 id
      * @return AddMemberResponseDto
      */
     @Transactional
-    public AddMemberResponseDto approveMember(Long userId, Long memberId) {
-        //TODO : Repositoy 메서드에 따라 수정, 권한 체킹(그룹 관리자만 멤버 승인 가능) -> security 권한 처리시 삭제
-        User user = userRepository.findById(userId).orElseThrow(() ->  new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getAuth().equals("ADMIN")){
+    public AddMemberResponseDto approveMember(Long userId, Long groupId, Long memberId) {
+        Member adminMember = memberRepository.findByUserIdAndGroupIdOrElseThrow(userId, groupId);
+        if(!adminMember.getRole().equals(MemberRole.GROUP_ADMIN)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
-        //해당 멤버를 찾아서 상태 변경(PENDING -> ACTIVITY)
+        //해당 멤버를 찾아서 상태 변경(pending -> active)
         Member member = memberRepository.findByMemberId(memberId);
-        member.setStatus("activity");
+        member.setStatus("active");
 
         return new AddMemberResponseDto(member.getId(), member.getStatus());
     }
@@ -76,22 +76,22 @@ public class MemberService {
      * 멤버 상태 변경
      *
      * @param userId   유저 id(그룹 관리자)
+     * @param groupId   그룹 id
      * @param memberId   변경되는 멤버 id
      * @param role   변경하는 상태값
      * @return MemberResponseDto
      */
     @Transactional
-    public MemberResponseDto updateStatusMember(Long userId, Long memberId, String role) {
-        //TODO : Repositoy 메서드에 따라 수정, 권한 체킹(그룹 관리자만 멤버 변경 가능) -> security 권한 처리시 삭제
-        User user = userRepository.findById(userId).orElseThrow(() ->  new CustomException(ErrorCode.USER_NOT_FOUND));
-        if(user.getAuth().equals("ADMIN")){
+    public MemberResponseDto updateStatusMember(Long userId, Long groupId, Long memberId, String role) {
+        Member adminMember = memberRepository.findByUserIdAndGroupIdOrElseThrow(userId, groupId);
+        if(!adminMember.getRole().equals(MemberRole.GROUP_ADMIN)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
         Member member = memberRepository.findByMemberId(memberId);
-        member.setRole(role);
+        member.setRole(MemberRole.valueOf(role));
 
-        return new MemberResponseDto(member.getId(), member.getRole());
+        return new MemberResponseDto(member.getId(), member.getRole().toString());
     }
 
 
@@ -107,7 +107,7 @@ public class MemberService {
         return members.stream()
                 .map(member -> new MemberResponseDto(
                         member.getId(),
-                        member.getRole())).collect(Collectors.toList());
+                        member.getRole().toString())).collect(Collectors.toList());
     }
 
     /**

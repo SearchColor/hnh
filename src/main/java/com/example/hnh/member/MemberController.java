@@ -1,6 +1,7 @@
 package com.example.hnh.member;
 
 import com.example.hnh.global.MessageResponseDto;
+import com.example.hnh.global.config.auth.UserDetailsImpl;
 import com.example.hnh.member.dto.AddMemberRequestDto;
 import com.example.hnh.member.dto.AddMemberResponseDto;
 import com.example.hnh.member.dto.MemberResponseDto;
@@ -8,6 +9,7 @@ import com.example.hnh.member.dto.UpdateStatusMemberRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,10 +29,11 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<AddMemberResponseDto> addMember(@PathVariable("groupId") Long groupId){
+    public ResponseEntity<AddMemberResponseDto> addMember(
+            @PathVariable("groupId") Long groupId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        // TODO : 유저 부분 완성되면 수정예정
-        Long userId = 1L;
+        Long userId = userDetails.getUser().getId();
 
         AddMemberResponseDto addMemberResponseDto = memberService.addMember(userId, groupId);
 
@@ -38,23 +41,28 @@ public class MemberController {
     }
 
     @PatchMapping("/approve")
-    public ResponseEntity<AddMemberResponseDto> approveMember(@RequestBody AddMemberRequestDto dto){
+    public ResponseEntity<AddMemberResponseDto> approveMember(
+            @PathVariable("groupId") Long groupId,
+            @RequestBody AddMemberRequestDto dto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        // TODO : 유저 부분 완성되면 수정예정
-        Long userId = 1L;
+        Long userId = userDetails.getUser().getId();
 
-        AddMemberResponseDto addMemberResponseDto = memberService.approveMember(userId, dto.getMemberId());
+        AddMemberResponseDto addMemberResponseDto = memberService.approveMember(userId, groupId, dto.getMemberId());
 
         return new ResponseEntity<>(addMemberResponseDto, HttpStatus.OK);
     }
 
     @PatchMapping("/{memberId}")
-    public ResponseEntity<MemberResponseDto> updateStatusMember(@PathVariable("memberId") Long memberId, @RequestBody UpdateStatusMemberRequestDto dto) {
+    public ResponseEntity<MemberResponseDto> updateStatusMember(
+            @PathVariable("groupId") Long groupId,
+            @PathVariable("memberId") Long memberId,
+            @RequestBody UpdateStatusMemberRequestDto dto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        // TODO : 유저 부분 완성되면 수정예정
-        Long userId = 1L;
+        Long userId = userDetails.getUser().getId();
 
-        MemberResponseDto memberResponseDto = memberService.updateStatusMember(userId, memberId, dto.getRole());
+        MemberResponseDto memberResponseDto = memberService.updateStatusMember(userId, groupId, memberId, dto.getRole());
 
         return new ResponseEntity<>(memberResponseDto, HttpStatus.OK);
     }
@@ -68,10 +76,11 @@ public class MemberController {
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<MessageResponseDto> deleteMember(@PathVariable("groupId") Long groupId) {
+    public ResponseEntity<MessageResponseDto> deleteMember(
+            @PathVariable("groupId") Long groupId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        // TODO : 유저 부분 완성되면 수정예정
-        Long userId = 1L;
+        Long userId = userDetails.getUser().getId();
 
         MessageResponseDto messageResponseDto = memberService.deleteMember(userId, groupId);
 

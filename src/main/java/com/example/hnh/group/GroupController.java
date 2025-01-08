@@ -1,10 +1,14 @@
 package com.example.hnh.group;
 
 
+import com.example.hnh.global.config.auth.UserDetailsImpl;
+import com.example.hnh.group.dto.GroupDetailResponseDto;
 import com.example.hnh.group.dto.GroupRequestDto;
 import com.example.hnh.group.dto.GroupResponseDto;
+import com.example.hnh.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,14 +24,56 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-
+    /**
+     * 그룹 생성 API
+     * @param userDetails
+     * @param requestDto
+     * @param image
+     * @return
+     * @throws IOException
+     */
     @PostMapping
-    public ResponseEntity<GroupResponseDto> createGroup (@RequestPart("requestDto") GroupRequestDto requestDto,
+    public ResponseEntity<GroupResponseDto> createGroup (@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                         @RequestPart("requestDto") GroupRequestDto requestDto,
                                                          @RequestPart("image") MultipartFile image) throws IOException {
-        GroupResponseDto groupResponseDto = groupService.createGroup(
+        User loginUser = userDetails.getUser();
 
-                requestDto.getCategoryId(), requestDto.getGroupName(), requestDto.getDetail(), image);
+        GroupResponseDto groupResponseDto = groupService.createGroup(
+                loginUser,
+                requestDto.getCategoryId(),
+                requestDto.getGroupName(),
+                requestDto.getDetail(),
+                image);
 
         return new ResponseEntity<>(groupResponseDto, HttpStatus.CREATED);
+    }
+
+    /**
+     * 그룹 단건 조회 API
+     * @param groupId
+     * @return
+     */
+    @GetMapping("/{groupId}")
+    public ResponseEntity<GroupDetailResponseDto> findGroup(@PathVariable Long groupId) {
+        // 서비스 호출로 그룹 상세 정보 조회
+        GroupDetailResponseDto groupDetails = groupService.findGroup(groupId);
+
+        // 응답 반환
+        return ResponseEntity.ok(groupDetails);
+    }
+
+    /**
+     * 그룹 수정 API
+     * @param groupId
+     * @param requestDto
+     * @return
+     */
+    @PatchMapping("/{groupId}")
+    public ResponseEntity<GroupResponseDto> updateGroup(@PathVariable Long groupId,
+                                                        @RequestBody GroupRequestDto requestDto) {
+
+        GroupResponseDto updatedGroup = groupService.updateGroup(groupId, requestDto);
+
+        return ResponseEntity.ok(updatedGroup);
     }
 }
