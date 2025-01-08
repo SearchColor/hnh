@@ -52,4 +52,10 @@ public class Board extends BaseEntity{
         this.group = group;
         this.member = member;
     }
+
+    public void updateBoard(String title, String imagePath, String detail) {
+        this.title = title;
+        this.imagePath = imagePath;
+        this.detail = detail;
+    }
 }

@@ -4,6 +4,7 @@ import com.example.hnh.board.dto.BoardRequestDto;
 import com.example.hnh.board.dto.BoardResponseDto;
 import com.example.hnh.board.dto.SearchAllBoardResponseDto;
 import com.example.hnh.board.dto.SearchBoardResponseDto;
+import com.example.hnh.board.dto.UpdateBoardResponseDto;
 import com.example.hnh.global.config.auth.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,5 +61,20 @@ public class BoardController {
         SearchBoardResponseDto boardResponseDto = boardService.getBoard(boardId);
 
         return new ResponseEntity<>(boardResponseDto, HttpStatus.OK);
+    }
+
+    @PatchMapping("{boardId}")
+    public ResponseEntity<UpdateBoardResponseDto> updateBoard(
+            @PathVariable Long boardId,
+            @PathVariable Long groupId,
+            @RequestPart("dto") BoardRequestDto dto,
+            @RequestPart("image") MultipartFile image,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+
+        Long userId = userDetails.getUser().getId();
+
+        UpdateBoardResponseDto updateBoardResponseDto = boardService.updateBoard(boardId, userId, groupId, dto.getTitle(), dto.getDetail(), image);
+
+        return new ResponseEntity<>(updateBoardResponseDto, HttpStatus.OK);
     }
 }
