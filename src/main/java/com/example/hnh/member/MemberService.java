@@ -65,9 +65,9 @@ public class MemberService {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
-        //해당 멤버를 찾아서 상태 변경(PENDING -> ACTIVITY)
+        //해당 멤버를 찾아서 상태 변경(pending -> active)
         Member member = memberRepository.findByMemberId(memberId);
-        member.setStatus("activity");
+        member.setStatus("active");
 
         return new AddMemberResponseDto(member.getId(), member.getStatus());
     }
