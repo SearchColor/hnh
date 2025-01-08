@@ -4,10 +4,8 @@ import com.example.hnh.global.error.errorcode.ErrorCode;
 import com.example.hnh.global.error.exception.CustomException;
 import com.example.hnh.global.util.AuthenticationScheme;
 import com.example.hnh.global.util.JwtProvider;
-import com.example.hnh.user.dto.AccountRequest;
-import com.example.hnh.user.dto.JwtAuthResponse;
-import com.example.hnh.user.dto.UserRequestDto;
-import com.example.hnh.user.dto.UserResponseDto;
+import com.example.hnh.user.dto.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,6 +59,7 @@ public class UserService {
     public UserResponseDto getUser(Long userId , User loginUser){
         User findUser = userRepository.findByIdOrElseThrow(userId);
         log.info(loginUser.getName());
+        log.info(validateUser(userId).toString());
         return new UserResponseDto(findUser);
     }
 
@@ -76,6 +75,26 @@ public class UserService {
         return "변경되었습니다.";
     }
 
+
+    //회원 탈퇴
+    @Transactional
+    public ResignResponseDto resignUser(Long userId , User loginUser , String password){
+        //로그인유저와 탈퇴 요청유저가 일치하는지 확인
+        if (!Objects.equals(userId , loginUser.getId())) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+        User findUser = this.userRepository.findByIdOrElseThrow(loginUser.getId());
+        this.validatePassword(password,findUser.getPassword());
+        findUser.setStatus(String.valueOf(UserStatus.DELETED).toLowerCase());
+        userRepository.save(findUser);
+        return new ResignResponseDto(findUser);
+    }
+
+    public Boolean validateUser(Long userId){
+        User findUser = this.userRepository.findByIdOrElseThrow(userId);
+        return !Objects.equals(findUser.getStatus(), String.valueOf(UserStatus.DELETED).toLowerCase());
+    }
+
     private void validatePassword(String rawPassword, String encodedPassword)
             throws IllegalArgumentException {
         boolean notValid = !this.bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
@@ -83,4 +102,5 @@ public class UserService {
             throw new CustomException(ErrorCode.PASSWORD_ERROR);
         }
     }
+
 }
