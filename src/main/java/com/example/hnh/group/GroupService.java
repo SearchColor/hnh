@@ -2,6 +2,7 @@ package com.example.hnh.group;
 
 import com.example.hnh.global.s3.S3Service;
 import com.example.hnh.group.dto.GroupDetailResponseDto;
+import com.example.hnh.group.dto.GroupRequestDto;
 import com.example.hnh.group.dto.GroupResponseDto;
 import com.example.hnh.member.Member;
 import com.example.hnh.member.MemberRepository;
@@ -70,7 +71,7 @@ public class GroupService {
     }
 
     /**
-     * 그룹 조회
+     * 그룹 단건 조회 API
      * @param groupId
      * @return
      */
@@ -90,5 +91,26 @@ public class GroupService {
 
         // GroupDetailResponseDto 변환 및 반환
         return GroupDetailResponseDto.toDto(group, user.getName(), members);
+    }
+
+    /**
+     * 그룹 수정 API
+     * @param groupId
+     * @param requestDto
+     * @return
+     */
+    public GroupResponseDto updateGroup(Long groupId, GroupRequestDto requestDto) {
+
+        // 그룹 조회
+        Group group = groupRepository.findByGroupOrElseThrow(groupId);
+
+        // 그룹 정보 업데이트
+        group.updateGroup(requestDto.getGroupName(), requestDto.getDetail(), requestDto.getImagePath());
+
+        // 수정된 내용 저장
+        groupRepository.save(group);
+
+        // DTO로 변환하여 반환
+        return GroupResponseDto.toDto(group);
     }
 }

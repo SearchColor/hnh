@@ -25,7 +25,7 @@ public class GroupController {
     }
 
     /**
-     * 그룹 생성
+     * 그룹 생성 API
      * @param userDetails
      * @param requestDto
      * @param image
@@ -49,7 +49,7 @@ public class GroupController {
     }
 
     /**
-     * 그룹 조회
+     * 그룹 단건 조회 API
      * @param groupId
      * @return
      */
@@ -60,5 +60,20 @@ public class GroupController {
 
         // 응답 반환
         return ResponseEntity.ok(groupDetails);
+    }
+
+    /**
+     * 그룹 수정 API
+     * @param groupId
+     * @param requestDto
+     * @return
+     */
+    @PatchMapping("/{groupId}")
+    public ResponseEntity<GroupResponseDto> updateGroup(@PathVariable Long groupId,
+                                                        @RequestBody GroupRequestDto requestDto) {
+
+        GroupResponseDto updatedGroup = groupService.updateGroup(groupId, requestDto);
+
+        return ResponseEntity.ok(updatedGroup);
     }
 }

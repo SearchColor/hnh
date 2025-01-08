@@ -30,8 +30,6 @@ public class Group extends BaseEntity {
     @Column(nullable = false)
     private String detail;
 
-
-
     public Group() {};
 
     public Group(Long userId, Long categoryId, String name, String imagePath, String detail) {
@@ -40,5 +38,12 @@ public class Group extends BaseEntity {
         this.name = name;
         this.imagePath = imagePath;
         this.detail = detail;
+    }
+
+    // 그룹 수정 메서드
+    public void updateGroup(String name, String detail, String imagePath) {
+        this.name = name;
+        this.detail = detail;
+        this.imagePath = imagePath;
     }
 }
