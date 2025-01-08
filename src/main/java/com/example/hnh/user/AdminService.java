@@ -5,6 +5,7 @@ import com.example.hnh.global.error.exception.CustomException;
 import com.example.hnh.user.dto.AdminCreateRequestDto;
 import com.example.hnh.user.dto.AdminResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class AdminService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 관리자 생성 로직
@@ -34,6 +36,7 @@ public class AdminService {
 
         //관리자 객체 생성, 저장
         User admin = adminCreateRequestDto.toEntity();
+        admin.setPassword(bCryptPasswordEncoder.encode(adminCreateRequestDto.getPassword()));
         admin.updateAuth(UserRole.ADMIN);
         User savedAdmin = userRepository.save(admin);
 

@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class AdminController {
      * @param adminCreateRequestDto 관리자 생성 정보
      * @return
      */
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<AdminResponseDto> createAdmin(
             @Valid @RequestBody AdminCreateRequestDto adminCreateRequestDto
     ) {
@@ -43,6 +44,7 @@ public class AdminController {
      * @return
      */
     @PostMapping("/categories")
+    @Secured("Auth_ADMIN")
     public ResponseEntity<CategoryResponseDto> createCategory(
             @Valid @RequestBody CreateCategoryRequestDto createCategoryRequestDto
     ) {
