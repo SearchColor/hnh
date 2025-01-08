@@ -34,7 +34,7 @@ public class AdminService {
 
         //관리자 객체 생성, 저장
         User admin = adminCreateRequestDto.toEntity();
-        admin.updateAuth("admin");
+        admin.updateAuth(UserRole.ADMIN);
         User savedAdmin = userRepository.save(admin);
 
         return new AdminResponseDto(savedAdmin);
