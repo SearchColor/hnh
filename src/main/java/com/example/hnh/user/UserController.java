@@ -47,4 +47,15 @@ public class UserController {
                                                     @AuthenticationPrincipal UserDetailsImpl userDetails){
         return new ResponseEntity<>(userService.getUser(userId , userDetails.getUser()), HttpStatus.OK);
     }
+
+    //회원 비밀번호 변경
+    @PatchMapping("{userId}")
+    public ResponseEntity<CommonResponseBody<String>> updatePassword(
+            @PathVariable Long userId,
+            @Valid @RequestBody UserPasswordUpdateRequestDto requestDto){
+        return ResponseEntity.ok().body(
+                new CommonResponseBody<>(
+                        userService.modifyPassword(userId,requestDto.getCurrentPassword(),requestDto.getNewPassword())
+                ));
+    }
 }

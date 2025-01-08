@@ -14,13 +14,13 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true , columnDefinition = "varchar(320)")
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false , columnDefinition = "varchar(20)" )
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false , columnDefinition = "varchar(100)")
     private String password;
 
     @Column(nullable = false , columnDefinition = "varchar(20)")
