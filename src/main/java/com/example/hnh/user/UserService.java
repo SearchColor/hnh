@@ -55,6 +55,13 @@ public class UserService {
         return new JwtAuthResponse(AuthenticationScheme.BEARER.getName(), accessToken);
     }
 
+    //회원 조회
+    public UserResponseDto getUser(Long userId , User loginUser){
+        User findUser = userRepository.findByIdOrElseThrow(userId);
+        log.info(loginUser.getName());
+        return new UserResponseDto(findUser);
+    }
+
 
     private void validatePassword(String rawPassword, String encodedPassword)
             throws IllegalArgumentException {
