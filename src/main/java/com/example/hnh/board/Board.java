@@ -32,6 +32,14 @@ public class Board extends BaseEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public Board() {}
 
-
+    public Board(String title, String imagePath, String detail, Long view, Group group, Member member) {
+        this.title = title;
+        this.imagePath = imagePath;
+        this.detail = detail;
+        this.view = view;
+        this.group = group;
+        this.member = member;
+    }
 }
