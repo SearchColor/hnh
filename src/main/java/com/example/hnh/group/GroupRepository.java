@@ -1,7 +1,5 @@
 package com.example.hnh.group;
 
-import com.example.hnh.global.error.errorcode.ErrorCode;
-import com.example.hnh.global.error.exception.CustomException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
@@ -14,4 +12,11 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
         );
     }
 
+//    @Query("select new com.example.hnh.user.dto.DashboardResponseDto("+" count )" +
+//            "from Group g " +
+//            "join g.Member m " +
+//            ")
+//    DashboardResponseDto findStatsByName(@Param("startDate") LocalDate start,
+//                                         @Param("endDate") LocalDate end,
+//                                         @Param("groupName") String groupName);
 }

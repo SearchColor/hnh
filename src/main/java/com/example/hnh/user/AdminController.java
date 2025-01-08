@@ -5,15 +5,15 @@ import com.example.hnh.category.dto.CategoryResponseDto;
 import com.example.hnh.category.dto.CreateCategoryRequestDto;
 import com.example.hnh.user.dto.AdminCreateRequestDto;
 import com.example.hnh.user.dto.AdminResponseDto;
+import com.example.hnh.user.dto.DashboardResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,5 +50,14 @@ public class AdminController {
     ) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(createCategoryRequestDto));
+    }
+
+    @GetMapping
+    public ResponseEntity<DashboardResponseDto> findStats(
+            @RequestParam(required = false, defaultValue = "2000-01-01") String startDate,
+            @RequestParam(required = false, defaultValue = "2099-12-31") String endDate,
+            @RequestParam String groupName
+            ) {
+
     }
 }

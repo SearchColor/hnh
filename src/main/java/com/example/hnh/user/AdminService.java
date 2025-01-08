@@ -2,13 +2,16 @@ package com.example.hnh.user;
 
 import com.example.hnh.global.error.errorcode.ErrorCode;
 import com.example.hnh.global.error.exception.CustomException;
+import com.example.hnh.group.GroupRepository;
 import com.example.hnh.user.dto.AdminCreateRequestDto;
 import com.example.hnh.user.dto.AdminResponseDto;
+import com.example.hnh.user.dto.DashboardResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class AdminService {
 
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
@@ -41,5 +45,12 @@ public class AdminService {
         User savedAdmin = userRepository.save(admin);
 
         return new AdminResponseDto(savedAdmin);
+    }
+
+    public DashboardResponseDto findStats(String startDate, String endDate, String groupName) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        groupRepository.
     }
 }
