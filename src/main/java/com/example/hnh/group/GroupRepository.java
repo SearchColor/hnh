@@ -11,5 +11,4 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
                 () -> new IllegalArgumentException("그룹을 찾을 수 없습니다.")
         );
     }
-
 }
