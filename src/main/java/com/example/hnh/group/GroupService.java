@@ -19,10 +19,8 @@ public class GroupService {
     }
 
 
-    public GroupResponseDto createGroup(Long categoryId, String groupName, String detail, MultipartFile image)
+    public GroupResponseDto createGroup(Long userId, Long categoryId, String groupName, String detail, MultipartFile image)
     throws IOException {
-
-        Long userId = 1L;
 
         // 그룹 이름 중복 확인
         if (groupRepository.existsByName(groupName)) {

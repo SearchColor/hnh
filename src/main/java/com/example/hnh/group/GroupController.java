@@ -1,10 +1,13 @@
 package com.example.hnh.group;
 
 
+import com.example.hnh.global.config.auth.UserDetailsImpl;
 import com.example.hnh.group.dto.GroupRequestDto;
 import com.example.hnh.group.dto.GroupResponseDto;
+import com.example.hnh.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,11 +25,17 @@ public class GroupController {
 
 
     @PostMapping
-    public ResponseEntity<GroupResponseDto> createGroup (@RequestPart("requestDto") GroupRequestDto requestDto,
+    public ResponseEntity<GroupResponseDto> createGroup (@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                         @RequestPart("requestDto") GroupRequestDto requestDto,
                                                          @RequestPart("image") MultipartFile image) throws IOException {
-        GroupResponseDto groupResponseDto = groupService.createGroup(
+        User loginUser = userDetails.getUser();
 
-                requestDto.getCategoryId(), requestDto.getGroupName(), requestDto.getDetail(), image);
+        GroupResponseDto groupResponseDto = groupService.createGroup(
+                loginUser.getId(),
+                requestDto.getCategoryId(),
+                requestDto.getGroupName(),
+                requestDto.getDetail(),
+                image);
 
         return new ResponseEntity<>(groupResponseDto, HttpStatus.CREATED);
     }
