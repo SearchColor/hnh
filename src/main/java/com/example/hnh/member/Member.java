@@ -15,7 +15,8 @@ public class Member extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "varchar(10) default 'MEMBER'")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "varchar(20) default 'MEMBER'")
     private MemberRole role;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -42,25 +42,27 @@ public class MemberController {
 
     @PatchMapping("/approve")
     public ResponseEntity<AddMemberResponseDto> approveMember(
+            @PathVariable("groupId") Long groupId,
             @RequestBody AddMemberRequestDto dto,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
 
         Long userId = userDetails.getUser().getId();
 
-        AddMemberResponseDto addMemberResponseDto = memberService.approveMember(userId, dto.getMemberId());
+        AddMemberResponseDto addMemberResponseDto = memberService.approveMember(userId, groupId, dto.getMemberId());
 
         return new ResponseEntity<>(addMemberResponseDto, HttpStatus.OK);
     }
 
     @PatchMapping("/{memberId}")
     public ResponseEntity<MemberResponseDto> updateStatusMember(
+            @PathVariable("groupId") Long groupId,
             @PathVariable("memberId") Long memberId,
             @RequestBody UpdateStatusMemberRequestDto dto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         Long userId = userDetails.getUser().getId();
 
-        MemberResponseDto memberResponseDto = memberService.updateStatusMember(userId, memberId, dto.getRole());
+        MemberResponseDto memberResponseDto = memberService.updateStatusMember(userId, groupId, memberId, dto.getRole());
 
         return new ResponseEntity<>(memberResponseDto, HttpStatus.OK);
     }
