@@ -2,8 +2,11 @@ package com.example.hnh.interestgroup;
 
 import com.example.hnh.group.Group;
 import com.example.hnh.group.GroupRepository;
+import com.example.hnh.interestgroup.dto.InterestGroupResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,5 +53,25 @@ public class InterestGroupService {
 
         return "active".equals(newStatus) ? "좋아요를 눌렀습니다." : "좋아요를 취소했습니다.";
 
+    }
+
+    /**
+     * 관심 그룹 목록 조회 API
+     * @param userId
+     * @return
+     */
+    public List<InterestGroupResponseDto> getUserInterestGroups(Long userId) {
+        // 좋아요 누른 그룹 목록 조회
+        List<InterestGroup> interestGroups = interestGroupRepository.findByUserIdAndStatus(userId, "active");
+
+        // DTO 리스트 생성 및 변환
+        List<InterestGroupResponseDto> responseDtoList = new ArrayList<>();
+        for (InterestGroup interestGroup : interestGroups) {
+            Group group = interestGroup.getGroup();
+            InterestGroupResponseDto dto = InterestGroupResponseDto.toDto(group);
+            responseDtoList.add(dto);
+        }
+
+        return responseDtoList;
     }
 }
