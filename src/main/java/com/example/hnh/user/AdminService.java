@@ -47,6 +47,14 @@ public class AdminService {
         return new AdminResponseDto(savedAdmin);
     }
 
+    /**
+     * 관리자 통계 로직
+     *
+     * @param startDate 조회 기간 시작 날짜
+     * @param endDate   조회 기간 마지막 날짜
+     * @param groupName 조회 그룹 이름
+     * @return
+     */
     public DashboardResponseDto findStats(String startDate, String endDate, String groupName) {
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
