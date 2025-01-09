@@ -31,8 +31,8 @@ public class Reply extends BaseEntity {
     public Reply() {}
 
     public Reply(String reply, Long memberId, Comment comment) {
-        this.memberId = memberId;
         this.reply = reply;
+        this.memberId = memberId;
         this.comment = comment;
     }
 }
