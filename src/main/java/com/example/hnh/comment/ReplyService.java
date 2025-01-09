@@ -1,6 +1,7 @@
 package com.example.hnh.comment;
 
 import com.example.hnh.comment.dto.ReplyResponseDto;
+import com.example.hnh.global.MessageResponseDto;
 import com.example.hnh.global.error.errorcode.ErrorCode;
 import com.example.hnh.global.error.exception.CustomException;
 import com.example.hnh.member.Member;
@@ -40,5 +41,19 @@ public class ReplyService {
         updateReply.updateReply(reply);
 
         return new ReplyResponseDto(updateReply.getId(), updateReply.getMemberId(), updateReply.getReply());
+    }
+
+    @Transactional
+    public MessageResponseDto deleteReply(Long userId, Long replyId) {
+        Reply deleteReply = replyRepository.findByReplyIdOrElseThrow(replyId);
+        Member member = memberRepository.findByMemberId(deleteReply.getMemberId());
+
+        if(!member.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_AUTHOR);
+        }
+
+        deleteReply.setStatus("deleted");
+
+        return new MessageResponseDto("삭제 완료되었습니다.");
     }
 }
