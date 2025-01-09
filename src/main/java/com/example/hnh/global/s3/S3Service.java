@@ -7,8 +7,10 @@ import com.example.hnh.global.error.errorcode.ErrorCode;
 import com.example.hnh.global.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -57,6 +59,32 @@ public class S3Service {
     }
 
     /**
+     * 업로드한 이미지 삭제 로직
+     *
+     * @param imagePath 업로드한 이미지 주소
+     */
+    public void deleteImage(String imagePath) {
+
+        try {
+            // 파일 URL 이 유효한지 확인
+            if (imagePath == null || !imagePath.contains(".com/")) {
+                throw new CustomException(ErrorCode.INVALID_IMAGE_URL);
+            }
+
+            // 파일 이름 추출
+            String splitStr = ".com/";
+            String fileName = imagePath.substring(imagePath.lastIndexOf(splitStr) + splitStr.length());
+
+            // S3에서 파일 삭제
+            amazonS3.deleteObject(bucket, fileName);
+
+        } catch (Exception e) {
+            // AWS S3 관련 예외 처리
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 삭제 실패", e);
+        }
+    }
+
+    /**
      * 업로드한 이미지 주소 생성 로직
      *
      * @param imageName 업로드한 이미지 이름
@@ -84,7 +112,7 @@ public class S3Service {
 
         //파일 형식 검증
         if (!extension.equals(".png") && !extension.equals(".jpg") && !extension.equals(".jpeg")) {
-            throw new CustomException(ErrorCode.INVALID_FILE_FORMAT);
+            throw new CustomException(ErrorCode.INVALID_IMAGE_FORMAT);
         }
         return extension;
     }
