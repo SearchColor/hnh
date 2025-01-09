@@ -76,4 +76,16 @@ public class GroupController {
 
         return ResponseEntity.ok(updatedGroup);
     }
+
+
+    @DeleteMapping("/{groupId}")
+    public ResponseEntity<String> deleteGruop(@PathVariable Long groupId,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        User loginUser = userDetails.getUser();
+
+        groupService.deleteGroup(groupId, loginUser);
+
+        return new ResponseEntity<>("그룹이 삭제되었습니다.", HttpStatus.OK);
+    }
 }

@@ -2,16 +2,16 @@ package com.example.hnh.user;
 
 import com.example.hnh.global.error.errorcode.ErrorCode;
 import com.example.hnh.global.error.exception.CustomException;
+import com.example.hnh.group.Group;
 import com.example.hnh.group.GroupRepository;
-import com.example.hnh.user.dto.AdminCreateRequestDto;
-import com.example.hnh.user.dto.AdminResponseDto;
-import com.example.hnh.user.dto.DashboardResponseDto;
+import com.example.hnh.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -51,6 +51,55 @@ public class AdminService {
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
 
-        groupRepository.
+        return groupRepository.findStatsByName(start, end, groupName);
+    }
+
+    /**
+     * 유저 리포트 로직
+     *
+     * @param reportUserRequestDto 유저 리포트 정보
+     * @return
+     */
+    @Transactional
+    public ReportUserResponseDto reportUser(ReportUserRequestDto reportUserRequestDto) {
+
+        //유저 조회
+        User findUser = userRepository.findById(reportUserRequestDto.getUserId()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        //요청 값과 같은 값인지 검증
+        if (Objects.equals(findUser.getStatus(), reportUserRequestDto.getStatus())) {
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
+
+        //유저 상태 변경, 저장
+        findUser.setStatus(reportUserRequestDto.getStatus());
+        User savedUser = userRepository.save(findUser);
+
+        return new ReportUserResponseDto(savedUser.getId(), savedUser.getStatus());
+    }
+
+    /**
+     * 그룹 리포트 로직
+     *
+     * @param reportGroupRequestDto 그룹 리포트 정보
+     * @return
+     */
+    public ReportGroupResponseDto reportGroup(ReportGroupRequestDto reportGroupRequestDto) {
+
+        //그룹 조회
+        Group findGroup = groupRepository.findById(reportGroupRequestDto.getGroupId()).orElseThrow(
+                () -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
+
+        //요청 값과 같은 값인지 검증
+        if (Objects.equals(findGroup.getStatus(), reportGroupRequestDto.getStatus())) {
+            throw new CustomException(ErrorCode.DUPLICATE_RESOURCE);
+        }
+
+        //그룹 상태 변경, 저장
+        findGroup.setStatus(reportGroupRequestDto.getStatus());
+        Group savedGroup = groupRepository.save(findGroup);
+
+        return new ReportGroupResponseDto(savedGroup.getId(), savedGroup.getStatus());
     }
 }

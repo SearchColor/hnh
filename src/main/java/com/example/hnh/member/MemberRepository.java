@@ -18,8 +18,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m FROM Member m JOIN FETCH m.user JOIN FETCH m.group WHERE m.user.id = :userId AND m.group.id = :groupId")
     Optional<Member> findByUserIdAndGroupId(Long userId, Long groupId);
 
+    //유저 id와 그룹 id로 멤버를 찾는 쿼리(status가 active인 유저)
+    @Query("SELECT m FROM Member m JOIN FETCH m.user JOIN FETCH m.group WHERE m.user.id = :userId AND m.group.id = :groupId AND m.status = 'active'")
+    Optional<Member> findByUserIdAndGroupIdWithStatus(Long userId, Long groupId);
+
     default Member findByUserIdAndGroupIdOrElseThrow(Long userId, Long groupId) {
-        return findByUserIdAndGroupId(userId, groupId).orElseThrow(
+        return findByUserIdAndGroupIdWithStatus(userId, groupId).orElseThrow(
                 () -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 

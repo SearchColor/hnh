@@ -49,7 +49,7 @@ public class UserController {
     }
 
     //회원 비밀번호 변경
-    @PatchMapping("{userId}")
+    @PatchMapping("/{userId}")
     public ResponseEntity<CommonResponseBody<String>> updatePassword(
             @PathVariable Long userId,
             @Valid @RequestBody UserPasswordUpdateRequestDto requestDto){
@@ -58,4 +58,16 @@ public class UserController {
                         userService.modifyPassword(userId,requestDto.getCurrentPassword(),requestDto.getNewPassword())
                 ));
     }
+
+    @DeleteMapping("/{userId}/resign")
+    public ResponseEntity<CommonResponseBody<ResignResponseDto>> resignUser(
+            @PathVariable Long userId,
+            @RequestBody ResignRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        return ResponseEntity.ok().body(new CommonResponseBody<>(
+                "회원 탈퇴 되었습니다.",userService.resignUser(userId,userDetails.getUser(),requestDto.getPassword())
+        ));
+    }
+
 }
