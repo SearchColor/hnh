@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
@@ -26,10 +26,10 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      * @return
      */
     @Query("SELECT new com.example.hnh.user.dto.DashboardResponseDto(" +
-            "count (g.members), count (g.boards), count (g.interestGroups), count (g.meets), :groupName) " +
-            "FROM Group g JOIN FETCH g.boards JOIN FETCH g.interestGroups JOIN FETCH g.meets JOIN FETCH g.members " +
-            "WHERE g.name = :groupName AND g.createdAt BETWEEN :start AND :end")
-    DashboardResponseDto findStatsByName(@Param("startDate") LocalDate start,
-                                         @Param("endDate") LocalDate end,
+            "count (member.id), count (b.id), count (i.id), count (meet.id), :groupName) " +
+            "FROM Group g JOIN g.boards b JOIN g.interestGroups i JOIN g.meets meet JOIN g.members member " +
+            "WHERE g.name = :groupName AND g.createdAt BETWEEN :startDate AND :endDate")
+    DashboardResponseDto findStatsByName(@Param("startDate") LocalDateTime start,
+                                         @Param("endDate") LocalDateTime end,
                                          @Param("groupName") String groupName);
 }

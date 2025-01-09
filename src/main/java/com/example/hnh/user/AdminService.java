@@ -51,7 +51,7 @@ public class AdminService {
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
 
-        return groupRepository.findStatsByName(start, end, groupName);
+        return groupRepository.findStatsByName(start.atStartOfDay(), end.atStartOfDay(), groupName);
     }
 
     /**
