@@ -23,4 +23,11 @@ public class InterestGroup extends BaseEntity {
 
     public InterestGroup() {}
 
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }
