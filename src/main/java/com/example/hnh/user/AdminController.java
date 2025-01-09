@@ -46,6 +46,16 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(createCategoryRequestDto));
     }
 
+    @GetMapping
+    public ResponseEntity<DashboardResponseDto> findStats(
+            @RequestParam(required = false, defaultValue = "2000-01-01") String startDate,
+            @RequestParam(required = false, defaultValue = "2099-12-31") String endDate,
+            @RequestParam String groupName
+            ) {
+
+        return ResponseEntity.ok(adminService.findStats(startDate, endDate, groupName));
+    }
+
     /**
      * 유저 리포트 메서드
      *

@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,6 +45,13 @@ public class AdminService {
         User savedAdmin = userRepository.save(admin);
 
         return new AdminResponseDto(savedAdmin);
+    }
+
+    public DashboardResponseDto findStats(String startDate, String endDate, String groupName) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        return groupRepository.findStatsByName(start.atStartOfDay(), end.atStartOfDay(), groupName);
     }
 
     /**
