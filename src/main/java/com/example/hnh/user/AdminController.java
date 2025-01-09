@@ -3,10 +3,7 @@ package com.example.hnh.user;
 import com.example.hnh.category.CategoryService;
 import com.example.hnh.category.dto.CategoryResponseDto;
 import com.example.hnh.category.dto.CreateCategoryRequestDto;
-import com.example.hnh.user.dto.AdminCreateRequestDto;
-import com.example.hnh.user.dto.AdminResponseDto;
-import com.example.hnh.user.dto.ReportUserRequestDto;
-import com.example.hnh.user.dto.ReportUserResponseDto;
+import com.example.hnh.user.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,6 +46,16 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(createCategoryRequestDto));
     }
 
+    @GetMapping
+    public ResponseEntity<DashboardResponseDto> findStats(
+            @RequestParam(required = false, defaultValue = "2000-01-01") String startDate,
+            @RequestParam(required = false, defaultValue = "2099-12-31") String endDate,
+            @RequestParam String groupName
+            ) {
+
+        return ResponseEntity.ok(adminService.findStats(startDate, endDate, groupName));
+    }
+
     /**
      * 유저 리포트 메서드
      *
@@ -61,5 +68,19 @@ public class AdminController {
     ) {
 
         return ResponseEntity.ok(adminService.reportUser(reportUserRequestDto));
+    }
+
+    /**
+     * 그룹 리포트 메서드
+     *
+     * @param reportGroupRequestDto 그룹 리포트 정보
+     * @return
+     */
+    @PatchMapping("/report-groups")
+    public ResponseEntity<ReportGroupResponseDto> reportGroup(
+            @Valid @RequestBody ReportGroupRequestDto reportGroupRequestDto
+    ) {
+
+        return ResponseEntity.ok(adminService.reportGroup(reportGroupRequestDto));
     }
 }
