@@ -35,4 +35,8 @@ public class Reply extends BaseEntity {
         this.memberId = memberId;
         this.comment = comment;
     }
+
+    public void updateReply(String reply) {
+        this.reply = reply;
+    }
 }
