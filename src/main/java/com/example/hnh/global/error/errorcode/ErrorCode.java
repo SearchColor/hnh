@@ -15,7 +15,7 @@ public enum ErrorCode {
     PASSWORD_UPDATE_ERROR(BAD_REQUEST, "새로운 비밀번호는 현재 비밀번호를 사용할 수 없습니다."),
     INVALID_IMAGE_URL(BAD_REQUEST, "지원되지 않는 이미지 주소 형식입니다"),
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
-    UNAUTHORIZED_AUTHOR(UNAUTHORIZED, "작성자만 수정 가능합니다."),
+    UNAUTHORIZED_AUTHOR(UNAUTHORIZED, "작성자만 수정/삭제가 가능합니다."),
 
     /* 403 FORBIDDEN : 권한이 없음 */
     UNAUTHORIZED_USER(FORBIDDEN, "권한이 없습니다. 해당유저만 가능합니다."),
