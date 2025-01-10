@@ -3,6 +3,7 @@ package com.example.hnh.meet;
 import com.example.hnh.global.config.auth.UserDetailsImpl;
 import com.example.hnh.meet.dto.MeetRequestDto;
 import com.example.hnh.meet.dto.MeetResponseDto;
+import com.example.hnh.meet.dto.MeetUpdateRequestDto;
 import com.example.hnh.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,26 @@ public class MeetController {
     public ResponseEntity<List<MeetResponseDto>> findMeets(@PathVariable Long groupId) {
         List<MeetResponseDto> meets = meetService.findMeets(groupId);
         return ResponseEntity.ok(meets);
+    }
+
+    /**
+     * 모임 수정 API
+     * @param groupId
+     * @param meetId
+     * @param requestDto
+     * @param userDetails
+     * @return
+     */
+    @PatchMapping("/{groupId}/meets/{meetId}")
+    public ResponseEntity<MeetResponseDto> updateMeet(
+            @PathVariable Long groupId,
+            @PathVariable Long meetId,
+            @RequestBody MeetUpdateRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        User loginUser = userDetails.getUser();
+        MeetResponseDto responseDto = meetService.updateMeet(groupId, meetId, loginUser, requestDto);
+
+        return ResponseEntity.ok(responseDto);
     }
 }

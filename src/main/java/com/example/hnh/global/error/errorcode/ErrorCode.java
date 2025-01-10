@@ -21,6 +21,7 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(FORBIDDEN, "권한이 없습니다. 해당유저만 가능합니다."),
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
+    RESOURCES_NOT_FOUND(NOT_FOUND, "해당 리소트 값을 찾을 수 없습니다."),
     USER_NOT_FOUND(NOT_FOUND, "해당 id로 인한 유저 정보를 찾을 수 없습니다"),
     MEMBER_NOT_FOUND(NOT_FOUND, "해당 멤버를 찾을 수 없습니다."),
     BOARD_NOT_FOUND(NOT_FOUND, "해당 게시물을 찾을 수 없습니다."),

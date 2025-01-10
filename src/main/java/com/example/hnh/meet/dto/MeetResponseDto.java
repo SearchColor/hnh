@@ -12,7 +12,7 @@ public class MeetResponseDto {
 
     private Long meetId; // 모임 식별자 ID
 
-    private Long memberId; // 멤버 식별자 ID
+    private Long memberId; // 모임 생성자 ID
 
     private String meetTitle; // 모임 이름
 
