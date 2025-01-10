@@ -26,6 +26,7 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(NOT_FOUND, "해당 게시물을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
     REPLY_NOT_FOUND(NOT_FOUND, "해당 답글을 찾을 수 없습니다."),
+    GROUP_NOT_FOUND(NOT_FOUND, "해당 그룹을 찾을 수 없습니다."),
 
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
