@@ -33,6 +33,8 @@ public class Meet extends BaseEntity {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
+
+
     public Meet() {}
 
     public Meet(String title, String detail, LocalDateTime dueAt, Group group, Long memberId) {
@@ -41,5 +43,17 @@ public class Meet extends BaseEntity {
         this.dueAt = dueAt;
         this.group = group;
         this.memberId = memberId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public void setDueAt(LocalDateTime dueAt) {
+        this.dueAt = dueAt;
     }
 }

@@ -1,9 +1,12 @@
 package com.example.hnh.meet;
 
+import com.example.hnh.global.error.errorcode.ErrorCode;
+import com.example.hnh.global.error.exception.CustomException;
 import com.example.hnh.group.Group;
 import com.example.hnh.group.GroupRepository;
 import com.example.hnh.meet.dto.MeetRequestDto;
 import com.example.hnh.meet.dto.MeetResponseDto;
+import com.example.hnh.meet.dto.MeetUpdateRequestDto;
 import com.example.hnh.member.Member;
 import com.example.hnh.member.MemberRepository;
 import com.example.hnh.user.User;
@@ -87,5 +90,50 @@ public class MeetService {
     }
 
 
+    /**
+     * 모임 수정 API
+     * @param groupId
+     * @param meetId
+     * @param loginUser
+     * @param requestDto
+     * @return
+     */
+    public MeetResponseDto updateMeet(Long groupId, Long meetId, User loginUser, MeetUpdateRequestDto requestDto) {
+        // 그룹 존재 여부 확인
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
+
+        // 모임 조회
+        Meet meet = meetRepository.findById(meetId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCES_NOT_FOUND));
+
+        // 모임이 해당 그룹에 속해 있는지 확인
+        if (!meet.getGroup().getId().equals(groupId)) {
+            throw new IllegalArgumentException("모임이 해당 그룹에 속해 있지 않습니다.");
+        }
+
+        // 수정 권한 확인 (모임 생성자만 수정 가능)
+        if (!meet.getMemberId().equals(loginUser.getId())) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+
+        // 요청에 포함된 필드만 업데이트
+        if (requestDto.getMeetTitle() != null) {
+            meet.setTitle(requestDto.getMeetTitle());
+        }
+        if (requestDto.getDetail() != null) {
+            meet.setDetail(requestDto.getDetail());
+        }
+        if (requestDto.getDueAt() != null) {
+            if (requestDto.getDueAt().isBefore(meet.getCreatedAt())) {
+                throw new IllegalArgumentException("모임 종료 날짜(dueAt)는 생성 날짜 이후여야 합니다.");
+            }
+            meet.setDueAt(requestDto.getDueAt());
+        }
+
+        // 저장 후 DTO 반환
+        meetRepository.save(meet);
+        return MeetResponseDto.toDto(meet);
+    }
 
 }
