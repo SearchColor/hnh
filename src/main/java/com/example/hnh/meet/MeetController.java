@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/groups")
 public class MeetController {
@@ -19,6 +21,13 @@ public class MeetController {
         this.meetService = meetService;
     }
 
+    /**
+     * 모임 생성 API
+     * @param groupId
+     * @param requestDto
+     * @param userDetails
+     * @return
+     */
     @PostMapping("/{groupId}/meets")
     public ResponseEntity<MeetResponseDto> createMeet(
             @PathVariable Long groupId,
@@ -29,5 +38,16 @@ public class MeetController {
         MeetResponseDto responseDto = meetService.createMeet(groupId, loginUser, requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    /**
+     * 해당 그룹 모든 모임 조회 API
+     * @param groupId
+     * @return
+     */
+    @GetMapping("/{groupId}/meets")
+    public ResponseEntity<List<MeetResponseDto>> findMeets(@PathVariable Long groupId) {
+        List<MeetResponseDto> meets = meetService.findMeets(groupId);
+        return ResponseEntity.ok(meets);
     }
 }

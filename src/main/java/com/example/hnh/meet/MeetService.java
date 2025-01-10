@@ -10,6 +10,8 @@ import com.example.hnh.user.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MeetService {
@@ -24,6 +26,13 @@ public class MeetService {
         this.meetRepository = meetRepository;
     }
 
+    /**
+     * 모임 생성 API
+     * @param groupId
+     * @param loginUser
+     * @param requestDto
+     * @return
+     */
     public MeetResponseDto createMeet(Long groupId, User loginUser, MeetRequestDto requestDto) {
 
         // 그룹 존재 여부 확인
@@ -52,5 +61,27 @@ public class MeetService {
         // 저장 후 DTO 변환
         meet = meetRepository.save(meet);
         return MeetResponseDto.toDto(meet);
+    }
+
+
+    /**
+     * 해당 그룹 모든 모임 조회 API
+     * @param groupId
+     * @return
+     */
+    public List<MeetResponseDto> findMeets(Long groupId) {
+
+        Group group = groupRepository.findByGroupOrElseThrow(groupId);
+
+        // 그룹 ID를 기준으로 모든 모임 조회
+        List<Meet> meets = meetRepository.findAllByGroupId(groupId);
+
+        // Meet 엔티티를 DTO로 변환하여 반환
+        List<MeetResponseDto> responseDtos = new ArrayList<>();
+        for (Meet meet : meets) {
+            responseDtos.add(MeetResponseDto.toDto(meet));
+        }
+
+        return responseDtos;
     }
 }
