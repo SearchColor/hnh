@@ -71,6 +71,7 @@ public class MeetService {
      */
     public List<MeetResponseDto> findMeets(Long groupId) {
 
+        // 해당 그룹이 존재하는지 확인
         Group group = groupRepository.findByGroupOrElseThrow(groupId);
 
         // 그룹 ID를 기준으로 모든 모임 조회
@@ -84,4 +85,7 @@ public class MeetService {
 
         return responseDtos;
     }
+
+
+
 }
