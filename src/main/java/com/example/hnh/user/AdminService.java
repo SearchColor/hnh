@@ -1,5 +1,6 @@
 package com.example.hnh.user;
 
+import com.example.hnh.global.RedisService;
 import com.example.hnh.global.error.errorcode.ErrorCode;
 import com.example.hnh.global.error.exception.CustomException;
 import com.example.hnh.group.Group;
@@ -21,6 +22,7 @@ public class AdminService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RedisService redisService;
 
     /**
      * 관리자 생성 로직
@@ -56,10 +58,30 @@ public class AdminService {
      * @return
      */
     public DashboardResponseDto findStats(String startDate, String endDate, String groupName) {
+
+        //LocalDate 로 변환
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
 
-        return groupRepository.findStatsByName(start.atStartOfDay(), end.atStartOfDay(), groupName);
+        //Redis 에서 조회
+        DashboardResponseDto redisStats = redisService.findGroupStats(groupName, startDate, endDate);
+
+        //Redis 에 없을 경우
+        if (redisStats == null) {
+
+            //GroupRepository 에서 조회
+            DashboardResponseDto stats = groupRepository
+                    .findStatsByName(start.atStartOfDay(), end.atStartOfDay(), groupName);
+
+
+            if (stats == null) {
+                throw  new CustomException(ErrorCode.GROUP_NOT_FOUND);
+            }
+            //Redis 에 저장
+            redisService.saveGroupStats(stats, startDate, endDate);
+            return stats;
+        }
+        return redisStats;
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.example.hnh.group;
 
-import com.example.hnh.global.s3.S3Service;
+import com.example.hnh.global.S3Service;
 import com.example.hnh.group.dto.GroupDetailResponseDto;
 import com.example.hnh.group.dto.GroupRequestDto;
 import com.example.hnh.group.dto.GroupResponseDto;

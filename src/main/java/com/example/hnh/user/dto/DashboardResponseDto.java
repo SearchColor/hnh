@@ -22,4 +22,12 @@ public class DashboardResponseDto {
         this.meetCount = meetCount;
         this.groupName = groupName;
     }
+
+    public DashboardResponseDto(DashboardResponseDto dashboardResponseDto) {
+        this.memberCount = dashboardResponseDto.getMemberCount();
+        this.boardCount = dashboardResponseDto.getBoardCount();
+        this.interestCount = dashboardResponseDto.getInterestCount();
+        this.meetCount = dashboardResponseDto.getMeetCount();
+        this.groupName = dashboardResponseDto.getGroupName();
+    }
 }
