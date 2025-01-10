@@ -21,6 +21,8 @@ public class MeetMember extends BaseEntity {
     @JoinColumn(name = "meet_id", nullable = false)
     private Meet meet;
 
+
+
     public MeetMember() {}
 
     public MeetMember(Long memberId, Meet meet) {
