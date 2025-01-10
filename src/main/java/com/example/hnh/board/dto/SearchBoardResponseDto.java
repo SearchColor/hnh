@@ -40,6 +40,8 @@ public class SearchBoardResponseDto {
         this.likeCount = board.getLikeCount();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
-        this.comments = board.getComments().stream().map(CommentDto::new).collect(Collectors.toList());
+        this.comments = board.getComments().stream()
+                .filter(comment -> "active".equals(comment.getStatus()))
+                .map(CommentDto::new).collect(Collectors.toList());
     }
 }
