@@ -51,4 +51,23 @@ public class MeetMemberController {
         MeetDetailsResponseDto responseDto = meetMemberService.findMeetMember(groupId, meetId);
         return ResponseEntity.ok(responseDto);
     }
+
+    /**
+     * 모임 참여 변경 API
+     * @param groupId
+     * @param meetId
+     * @param userDetails
+     * @return
+     */
+    @PatchMapping("/{groupId}/meets/{meetId}/participants")
+    public ResponseEntity<String> changeMeetMemberStatus (
+            @PathVariable Long groupId,
+            @PathVariable Long meetId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        User loginUser = userDetails.getUser();
+        String message = meetMemberService.changeMeetMemberStatus(groupId, meetId, loginUser);
+
+        return ResponseEntity.ok(message);
+    }
 }
