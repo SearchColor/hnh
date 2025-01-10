@@ -136,4 +136,43 @@ public class MeetService {
         return MeetResponseDto.toDto(meet);
     }
 
+    /**
+     * 모임 삭제 API
+     * @param groupId
+     * @param meetId
+     * @param loginUser
+     */
+    public void deleteMeet(Long groupId, Long meetId, User loginUser) {
+        // 모임 조회
+        Meet meet = meetRepository.findById(meetId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 모임입니다."));
+
+        // 모임이 해당 그룹에 속해 있는지 확인
+        if (!meet.getGroup().getId().equals(groupId)) {
+            throw new IllegalArgumentException("모임이 해당 그룹에 속해 있지 않습니다.");
+        }
+
+        // 유저가 모임 생성자인지 확인
+        if (!meet.getMemberId().equals(loginUser.getId())) {
+            throw new IllegalArgumentException("모임 생성자만 삭제할 수 있습니다.");
+        }
+
+        // 모임 상태 확인
+        checkMeetStatus(meet);
+
+        // 모임 상태 변경
+        if ("active".equals(meet.getStatus())) {
+            meet.setStatus("deleted");
+        }
+
+        meetRepository.save(meet);
+    }
+
+
+    // 모임 상태 확인 메서드
+    private void checkMeetStatus(Meet meet) {
+        if ("deleted".equals(meet.getStatus())) {
+            throw new IllegalArgumentException("이미 삭제된 모임입니다.");
+        }
+    }
 }
