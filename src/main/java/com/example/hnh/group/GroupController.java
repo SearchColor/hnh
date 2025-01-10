@@ -78,6 +78,12 @@ public class GroupController {
     }
 
 
+    /**
+     * 그룹 삭제 API
+     * @param groupId
+     * @param userDetails
+     * @return
+     */
     @DeleteMapping("/{groupId}")
     public ResponseEntity<String> deleteGruop(@PathVariable Long groupId,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {

@@ -72,4 +72,23 @@ public class MeetController {
 
         return ResponseEntity.ok(responseDto);
     }
+
+    /**
+     * 모임 삭제 API
+     * @param groupId
+     * @param meetId
+     * @param userDetails
+     * @return
+     */
+    @DeleteMapping("/{groupId}/meets/{meetId}")
+    public ResponseEntity<String> deleteMeet(@PathVariable Long groupId,
+                                             @PathVariable Long meetId,
+                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        User loginUser = userDetails.getUser();
+
+        meetService.deleteMeet(groupId, meetId, loginUser);
+
+        return new ResponseEntity<>("모임이 삭제되었습니다.", HttpStatus.OK);
+    }
 }
