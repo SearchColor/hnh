@@ -33,6 +33,8 @@ public class Meet extends BaseEntity {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
+    public Meet() {}
+
     public Meet(String title, String detail, LocalDateTime dueAt, Group group, Long memberId) {
         this.title = title;
         this.detail = detail;
