@@ -104,8 +104,7 @@ public class MeetService {
                 .orElseThrow(() -> new CustomException(ErrorCode.GROUP_NOT_FOUND));
 
         // 모임 조회
-        Meet meet = meetRepository.findById(meetId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCES_NOT_FOUND));
+        Meet meet = meetRepository.findByMeetOrElseThrow(meetId);
 
         // 모임이 해당 그룹에 속해 있는지 확인
         if (!meet.getGroup().getId().equals(groupId)) {
@@ -144,8 +143,7 @@ public class MeetService {
      */
     public void deleteMeet(Long groupId, Long meetId, User loginUser) {
         // 모임 조회
-        Meet meet = meetRepository.findById(meetId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 모임입니다."));
+        Meet meet = meetRepository.findByMeetOrElseThrow(meetId);
 
         // 모임이 해당 그룹에 속해 있는지 확인
         if (!meet.getGroup().getId().equals(groupId)) {
