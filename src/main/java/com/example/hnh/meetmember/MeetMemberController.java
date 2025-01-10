@@ -1,14 +1,12 @@
 package com.example.hnh.meetmember;
 
 import com.example.hnh.global.config.auth.UserDetailsImpl;
+import com.example.hnh.meetmember.dto.MeetDetailsResponseDto;
 import com.example.hnh.meetmember.dto.MeetMemberResponseDto;
 import com.example.hnh.user.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/groups")
@@ -36,6 +34,21 @@ public class MeetMemberController {
         User loginUser = userDetails.getUser();
         MeetMemberResponseDto responseDto = meetMemberService.joinMeet(groupId, meetId, loginUser);
 
+        return ResponseEntity.ok(responseDto);
+    }
+
+    /**
+     * 모임 멤버 조회 API
+     * @param groupId
+     * @param meetId
+     * @return
+     */
+    @GetMapping("/{groupId}/meets/{meetId}")
+    public ResponseEntity<MeetDetailsResponseDto> findMeetMember(
+            @PathVariable Long groupId,
+            @PathVariable Long meetId) {
+
+        MeetDetailsResponseDto responseDto = meetMemberService.findMeetMember(groupId, meetId);
         return ResponseEntity.ok(responseDto);
     }
 }

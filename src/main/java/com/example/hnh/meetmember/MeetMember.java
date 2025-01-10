@@ -22,7 +22,6 @@ public class MeetMember extends BaseEntity {
     private Meet meet;
 
 
-
     public MeetMember() {}
 
     public MeetMember(Long memberId, Meet meet) {
