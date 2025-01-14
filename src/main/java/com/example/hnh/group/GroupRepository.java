@@ -1,11 +1,13 @@
 package com.example.hnh.group;
 
+import com.example.hnh.group.dto.GroupResponseDto;
 import com.example.hnh.user.dto.DashboardResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
@@ -40,4 +42,10 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     DashboardResponseDto findStatsByName(@Param("startDate") LocalDateTime start,
                                          @Param("endDate") LocalDateTime end,
                                          @Param("groupName") String groupName);
+
+
+    // 그룹 정보와 관련된 데이터 조회 (User와 조인)
+    @Query("SELECT g FROM Group g JOIN User u ON g.userId = u.id")
+    List<Group> findAllGroupsWithUser();
+
 }
