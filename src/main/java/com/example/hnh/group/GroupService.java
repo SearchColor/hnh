@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,7 +143,10 @@ public class GroupService {
         groupRepository.save(group);
     }
 
-    // 그룹 상태 확인 메서드
+    /**
+     * 그룹 상태 확인 메서드
+     * @param group
+     */
     public void checkGroupStatus(Group group) {
 
         if ("deleted".equals(group.getStatus())) {
@@ -151,4 +155,15 @@ public class GroupService {
     }
 
 
+    public List<GroupResponseDto> findAllGroups() {
+        // 그룹 목록 조회
+        List<Group> groups = groupRepository.findAllGroupsWithUser();
+
+        // DTO 변환
+        List<GroupResponseDto> dtos = new ArrayList<>();
+        for (Group group : groups) {
+            dtos.add(GroupResponseDto.toDto(group));
+        }
+        return dtos;
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/groups")
@@ -93,5 +94,14 @@ public class GroupController {
         groupService.deleteGroup(groupId, loginUser);
 
         return new ResponseEntity<>("그룹이 삭제되었습니다.", HttpStatus.OK);
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<GroupResponseDto>> findAllGroups() {
+
+        List<GroupResponseDto> groups = groupService.findAllGroups();
+
+        return ResponseEntity.ok(groups);
     }
 }
