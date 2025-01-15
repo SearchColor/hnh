@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity // SecurityFilterChain 빈 설정을 위해 필요.
 @RequiredArgsConstructor
-public class SecretFilter {
+public class WebConfig {
 
     /**
      * JWT 인증 Filter.
@@ -47,7 +47,8 @@ public class SecretFilter {
     /**
      * 화이트 리스트.
      */
-    private static final String[] WHITE_LIST = {"/users/login", "/users/signup", "/error", "/admins/signup"};
+    private static final String[] WHITE_LIST = {"/users/login", "/users/signup", "/error", "/admins/signup"
+            , "/ws/chat" , "/room" , "/chat"};
 
     /**
      * security 필터.
