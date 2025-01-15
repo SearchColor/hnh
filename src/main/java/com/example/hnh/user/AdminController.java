@@ -46,6 +46,14 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(createCategoryRequestDto));
     }
 
+    /**
+     * 관리자 통계 메서드
+     *
+     * @param startDate 조회 기간 시작 날짜
+     * @param endDate   조회 기간 마지막 날짜
+     * @param groupName 조회 그룹 이름
+     * @return
+     */
     @GetMapping
     public ResponseEntity<DashboardResponseDto> findStats(
             @RequestParam(required = false, defaultValue = "2000-01-01") String startDate,

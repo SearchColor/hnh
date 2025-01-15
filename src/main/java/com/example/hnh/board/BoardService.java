@@ -7,7 +7,7 @@ import com.example.hnh.board.dto.UpdateBoardResponseDto;
 import com.example.hnh.global.MessageResponseDto;
 import com.example.hnh.global.error.errorcode.ErrorCode;
 import com.example.hnh.global.error.exception.CustomException;
-import com.example.hnh.global.s3.S3Service;
+import com.example.hnh.global.S3Service;
 import com.example.hnh.member.Member;
 import com.example.hnh.member.MemberRepository;
 import jakarta.transaction.Transactional;
