@@ -5,6 +5,7 @@ import com.example.hnh.group.dto.GroupDetailResponseDto;
 import com.example.hnh.group.dto.GroupRankingResponseDto;
 import com.example.hnh.group.dto.GroupRequestDto;
 import com.example.hnh.group.dto.GroupResponseDto;
+import com.example.hnh.interestgroup.InterestGroupRepository;
 import com.example.hnh.member.Member;
 import com.example.hnh.member.MemberRepository;
 import com.example.hnh.member.MemberRole;
@@ -29,13 +30,15 @@ public class GroupService {
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
     private final RedisRankingRepository redisRankingRepository;
+    private final InterestGroupRepository interestGroupRepository;
 
-    public GroupService(GroupRepository groupRepository, S3Service s3Service, UserRepository userRepository, MemberRepository memberRepository, RedisRankingRepository redisRankingRepository) {
+    public GroupService(GroupRepository groupRepository, S3Service s3Service, UserRepository userRepository, MemberRepository memberRepository, RedisRankingRepository redisRankingRepository, InterestGroupRepository interestGroupRepository) {
         this.groupRepository = groupRepository;
         this.s3Service = s3Service;
         this.userRepository = userRepository;
         this.memberRepository = memberRepository;
         this.redisRankingRepository = redisRankingRepository;
+        this.interestGroupRepository = interestGroupRepository;
     }
 
 
@@ -173,6 +176,23 @@ public class GroupService {
         // Redis에서 그룹 랭킹 데이터를 ZSet 형식으로 가져옴 (그룹 ID와 스코어 포함)
 
         List<GroupRankingResponseDto> dtos = new ArrayList<>();
+
+        // Redis에 없는 그룹 데이터를 동기화
+        List<Group> allGroups = groupRepository.findAll(); // DB에서 모든 그룹 가져오기
+
+        for (Group group : allGroups) {
+            boolean isGroupInRedis = rankedGroups.stream()
+                    .anyMatch(rankedGroup -> Long.valueOf(rankedGroup.getValue().toString()).equals(group.getId()));
+
+            if (!isGroupInRedis) {
+                // Redis에 없는 경우 DB의 기존 관심 수 가져오기
+                int interestCount = interestGroupRepository.countByGroupIdAndStatus(group.getId(), "active");
+                redisRankingRepository.addGroupToRanking(group.getId(), interestCount); // Redis에 추가
+            }
+        }
+
+        // Redis에서 동기화된 데이터 다시 가져오기
+        rankedGroups = redisRankingRepository.getTopRankedGroups();
 
         // 결과를 저장할 DTO 리스트 초기화
         for (ZSetOperations.TypedTuple<Object> rankedGroup : rankedGroups) {
