@@ -1,7 +1,8 @@
 services:
   app:
     build: .
-    image: hnh-servers:1
+    image: hajupe/hnh-servers:1
+    container_name: hnh-app
     ports:
       - "8080:8080"
     depends_on:
