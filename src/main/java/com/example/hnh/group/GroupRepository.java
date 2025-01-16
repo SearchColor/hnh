@@ -1,6 +1,5 @@
 package com.example.hnh.group;
 
-import com.example.hnh.group.dto.GroupResponseDto;
 import com.example.hnh.user.dto.DashboardResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -33,7 +32,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "COUNT(i.id) As interestCount," +
             "COUNT(meet.id) AS meetCount," +
             "g.name As groupName " +
-            "FROM `Group` g " +
+            "FROM `group` g " +
             "LEFT JOIN board b ON g.id = b.group_id " +
             "LEFT JOIN interest_group i ON g.id = i.group_id " +
             "LEFT JOIN meet meet ON g.id = meet.group_id " +
