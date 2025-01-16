@@ -32,8 +32,6 @@ public class ChatService {
         List<GroupResponseDto> groupList =  groupService.findAllGroups();
         // 2.각 그룹id 으로 createRoom
         groupList.forEach(g -> createRoom(String.valueOf(g.getGroupId()) , g.getGroupName()));
-        //
-
 
     }
 

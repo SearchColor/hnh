@@ -1,10 +1,12 @@
 package com.example.hnh.global.chat;
 
 
+import com.example.hnh.member.MemberRepository;
+import com.example.hnh.user.User;
+import com.example.hnh.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketMessage;
@@ -21,11 +23,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final ChatService chatService;
+    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     //웹소켓 연결
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-//      log.info(Objects.requireNonNull(session.getUri()).getQuery() +" is connected");
         String uriQuery  = Objects.requireNonNull(session.getUri()).getQuery();
         String userId = uriQuery.substring(uriQuery.lastIndexOf("=") +1);
         log.info("userId = {} is connected", userId );
@@ -34,10 +37,18 @@ public class WebSocketHandler extends TextWebSocketHandler {
     //메시징
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> textMessage) throws Exception {
+
         String payload = (String) textMessage.getPayload();
         ChatMessage chatMessage = objectMapper.readValue(payload, ChatMessage.class);
+
+        String uriQuery  = Objects.requireNonNull(session.getUri()).getQuery();
+        String userId = uriQuery.substring(uriQuery.lastIndexOf("=") +1);
+
+
+        User user = userRepository.findByIdOrElseThrow(Long.valueOf(userId));
+        chatMessage.setSender(user.getName());
         ChatRoom room = chatService.getRoomById(chatMessage.getRoomId());
-        room.handleActions(session, chatMessage, chatService);
+        room.handleActions(session, chatMessage, chatService , memberRepository);
     }
 
 

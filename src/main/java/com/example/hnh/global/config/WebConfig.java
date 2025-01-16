@@ -48,7 +48,7 @@ public class WebConfig {
      * 화이트 리스트.
      */
     private static final String[] WHITE_LIST = {"/users/login", "/users/signup", "/error", "/admins/signup"
-            , "/ws/chat" , "/room" , "/chat"};
+            , "/ws/chat" , "/room" , "/chats"};
 
     /**
      * security 필터.
