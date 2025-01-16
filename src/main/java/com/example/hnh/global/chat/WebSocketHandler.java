@@ -44,7 +44,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String uriQuery  = Objects.requireNonNull(session.getUri()).getQuery();
         String userId = uriQuery.substring(uriQuery.lastIndexOf("=") +1);
 
-
         User user = userRepository.findByIdOrElseThrow(Long.valueOf(userId));
         chatMessage.setSender(user.getName());
         ChatRoom room = chatService.getRoomById(chatMessage.getRoomId());
