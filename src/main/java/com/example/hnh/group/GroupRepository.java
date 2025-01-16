@@ -1,5 +1,6 @@
 package com.example.hnh.group;
 
+import com.example.hnh.group.dto.GroupResponseDto;
 import com.example.hnh.user.dto.DashboardResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
