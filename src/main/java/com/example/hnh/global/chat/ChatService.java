@@ -2,8 +2,8 @@ package com.example.hnh.global.chat;
 
 
 import com.example.hnh.global.chat.dto.GetRoomResponseDto;
-import com.example.hnh.group.Group;
 import com.example.hnh.group.GroupService;
+import com.example.hnh.group.dto.GroupRankingResponseDto;
 import com.example.hnh.group.dto.GroupResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -29,10 +29,9 @@ public class ChatService {
     private void init() {
         chatRooms = new LinkedHashMap<>();
         // 1.전체 그룹 조회
-        List<GroupResponseDto> groupList =  groupService.findAllGroups();
+        List<GroupRankingResponseDto> groupList =  groupService.findAllGroupsWithRanking();
         // 2.각 그룹id 으로 createRoom
         groupList.forEach(g -> createRoom(String.valueOf(g.getGroupId()) , g.getGroupName()));
-
     }
 
     public List<GetRoomResponseDto> getAllRoom() {
